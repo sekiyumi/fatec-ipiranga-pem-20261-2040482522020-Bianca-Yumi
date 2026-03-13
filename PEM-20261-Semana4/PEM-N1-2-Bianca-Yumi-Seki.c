@@ -1,3 +1,7 @@
+/*Bianca Yumi Seki
+11/03/2026
+Fatec Ipiranga ADS Vespertino
+Objetivo: Criar um jogo da velha*/
 #include <stdio.h>
 #include <stdlib.h>
 // tabuleiro do jogo (3x3) e jogador inicial
