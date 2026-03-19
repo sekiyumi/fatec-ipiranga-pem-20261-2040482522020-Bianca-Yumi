@@ -51,9 +51,9 @@ void iniciarTabuleiro(){
 // função para mostrar o tabuleiro
 void mostrarTabuleiro(){
     int i,j;
-    printf("\n   1  2  3  4  5  6  7  8\n");
+    printf("\n    A   B   C   D   E   F   G   H\n");
     for(i=7;i>=0;i--){
-        printf("%c  ",'A'+i);
+        printf("%d  ",i+1);
         for(j=0;j<tam;j++){
             printf("%3s ",tabuleiro[i][j]);
         }
@@ -75,7 +75,7 @@ int main(){
     mostrarTabuleiro();
 
     printf("=========== JOGADA 1 ===========\n");
-    printf("Peao branco para D5\n");
+    printf("Peao branco para E4\n");
     moverPeca(1,4,3,4);
     mostrarTabuleiro();
     printf("Peao preto para E5\n");
@@ -92,15 +92,16 @@ int main(){
 
     printf("=========== JOGADA 3 ===========\n");
     printf("Dama branca para H5\n");
-    moverPeca(0,3,3,7);
+    moverPeca(0,3,4,7);
     mostrarTabuleiro();
     printf("Cavalo preto para F6\n");
     moverPeca(7,6,5,5);
     mostrarTabuleiro();
 
+
     printf("=========== JOGADA 4 ===========\n");
     printf("Dama branca para F7 (XEQUE MATE!)\n");
-    moverPeca(3,7,6,5);
+    moverPeca(4,7,6,5);
     mostrarTabuleiro();
     return 0;
 }
