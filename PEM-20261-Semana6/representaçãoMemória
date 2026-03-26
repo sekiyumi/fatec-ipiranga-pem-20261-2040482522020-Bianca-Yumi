@@ -1,0 +1,15 @@
+#include <stdio.h>
+void inverterNumero(int n) {
+    if (n == 0) {
+        return;
+    }
+    printf("%d", n % 10);
+    inverterNumero(n / 10);
+}
+int main() {
+    int valor = 12345;
+    printf("Invertendo o numero %d: ", valor);
+    inverterNumero(valor);
+    printf("\n");
+    return 0;
+}
