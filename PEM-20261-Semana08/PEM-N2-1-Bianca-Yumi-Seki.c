@@ -67,7 +67,7 @@ void processarCarga(float *ptr_vetor,int n) {
     // Verifica pesos acima do limite e corrige
     for (i=0;i<n;i++) {
         if (*(ptr_vetor+i)>limite) {
-            printf("Pacote %d excedeu o limite. Aplicando correcao de -5%%.\n",i+1);
+            printf("Pacote %d excedeu o limite. Aplicando correcao de -5%.\n",i+1);
 
             // Reduz 5% do peso
             *(ptr_vetor+i)=*(ptr_vetor + i)*0.95;
