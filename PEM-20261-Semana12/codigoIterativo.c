@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*  FATEC-Ipiranga      ADS Verspertino                                     */
-/*  Bianca Yumi Seki                                                        */
-/*  Objetivo: Código iterativo                                              */
-/*                                                         Data: 24/04/2026 */
+/* FATEC-Ipiranga      ADS Vespertino                                      */
+/* Bianca Yumi Seki                                                        */
+/* Objetivo: Código Novo 2 - Paradigma Iterativo                           */
+/* Data: 24/04/2026 */
 /*--------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <string.h>
@@ -19,39 +19,57 @@ typedef struct {
     int qtd_sub;
 } Pasta;
 
-// Banco de dados simulado (Vetor que substitui o uso de ponteiros)
+typedef struct {
+    int index;
+    int nivel;
+    int visitado;
+} ItemPilha;
+
 Pasta drive[MAX_PASTAS];
 
-// Função para calcular o tamanho acumulado e mapear (Recursiva)
-float processarHierarquia(int index, int nivel_atual, int limite_profundidade) {
-    if (index == -1 || nivel_atual > limite_profundidade) {
-        return 0;
+void processarHierarquiaIterativa(int raiz_idx, int limite_profundidade) {
+    ItemPilha pilha[MAX_PASTAS * 2];
+    int topo = -1;
+
+    pilha[++topo] = (ItemPilha){raiz_idx, 0, 0};
+
+    while (topo >= 0) {
+        ItemPilha *atual = &pilha[topo];
+
+        if (atual->index == -1 || atual->nivel > limite_profundidade) {
+            topo--;
+            continue;
+        }
+
+        if (!atual->visitado) {
+            atual->visitado = 1;
+            drive[atual->index].tamanho_total = drive[atual->index].tamanho_proprio;
+
+            for (int i = drive[atual->index].qtd_sub - 1; i >= 0; i--) {
+                pilha[++topo] = (ItemPilha){drive[atual->index].subpastas_indices[i], atual->nivel + 1, 0};
+            }
+        } else {
+            int idx = atual->index;
+            
+            for (int i = 0; i < drive[idx].qtd_sub; i++) {
+                int filho_idx = drive[idx].subpastas_indices[i];
+                if (filho_idx != -1) {
+                    drive[idx].tamanho_total += drive[filho_idx].tamanho_total;
+                }
+            }
+
+            for (int i = 0; i < atual->nivel; i++) printf("  ");
+            printf("|-- %s [%.2f GB]", drive[idx].nome, drive[idx].tamanho_total);
+            
+            if (drive[idx].tamanho_total > LIMITE_ALERTA) printf(" [!] ALERTA: GARGALO DETECTADO");
+            printf("\n");
+            
+            topo--;
+        }
     }
-
-    // Inicializa o tamanho total com o tamanho da própria pasta
-    drive[index].tamanho_total = drive[index].tamanho_proprio;
-
-    // Mergulho recursivo para somar tamanhos dos filhos
-    for (int i = 0; i < drive[index].qtd_sub; i++) {
-        int filho_idx = drive[index].subpastas_indices[i];
-        drive[index].tamanho_total += processarHierarquia(filho_idx, nivel_atual + 1, limite_profundidade);
-    }
-
-    // Impressão com formatação de BI
-    for (int i = 0; i < nivel_atual; i++) printf("  "); // Indentação
-    
-    printf("|-- %s [%.2f GB]", drive[index].nome, drive[index].tamanho_total);
-    
-    if (drive[index].tamanho_total > LIMITE_ALERTA) {
-        printf(" [!] ALERTA: GARGALO DETECTADO");
-    }
-    printf("\n");
-
-    return drive[index].tamanho_total;
 }
 
 int main() {
-    // 1. Configuração da Árvore via Índices
     strcpy(drive[0].nome, "RAIZ");
     drive[0].tamanho_proprio = 10.0;
     drive[0].qtd_sub = 2;
@@ -77,19 +95,17 @@ int main() {
     printf("Defina o limite de profundidade do mergulho: ");
     scanf("%d", &limite);
 
-    printf("\n--- RELATORIO DE HIERARQUIA INTELIGENTE ---\n");
+    printf("\n--- RELATORIO DE HIERARQUIA ITERATIVA ---\n");
 
     t = clock();
-
-    processarHierarquia(0, 0, limite);
-
+    processarHierarquiaIterativa(0, limite);
     t = clock() - t;
 
     double tempo_execucao = ((double)t)/CLOCKS_PER_SEC;
 
     printf("-------------------------------------------\n");
     printf("Tempo de execucao: %f segundos\n", tempo_execucao);
-    printf("Ciclos por segundo: %ld\n", (long)t);
+    printf("Ciclos processados: %ld\n", (long)t);
 
     return 0;
 }
